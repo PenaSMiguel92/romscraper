@@ -12,15 +12,15 @@ games_to_download = ['Castlevania', 'Conker\'s Bad Fur Day', 'Donkey Kong 64', \
                      'Star Fox 64', 'Super Mario 64', 'Super Smash Bros.']
 
 
-def main():
-    # test = internetarchive.search('https://archive.org/details/nintendo-64-romset-usa')
-    search = internetarchive.search_items('identifier:nintendo-64-romset-usa')
+def download_files(identifier, extension):
+    search = internetarchive.search_items('identifier:' + identifier)
     for result in search:
         itemid = result['identifier']
         item = internetarchive.get_item(itemid)
         files = item.get_files()
+        extension_length = len(extension)
         for file in tqdm(files):
-            if file.name[-4:] != '.zip':
+            if file.name[-extension_length:] != extension:
                 continue 
             bracket_index = file.name.find('(')
             game_name = file.name[:bracket_index-1]
@@ -28,6 +28,11 @@ def main():
                 continue
             
             print('Downloading ' + game_name)
+
+def main():
+    download_files('nintendo-64-romset-usa', '.zip')
+    # test = internetarchive.search('https://archive.org/details/nintendo-64-romset-usa')
+    
 
 if __name__ == "__main__":
     main()
